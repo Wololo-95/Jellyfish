@@ -37,14 +37,14 @@ async def on_ready():
 async def on_message(message):
     # Checks to see if the message contains a given string
     if message.content == "hello":
-        # Returns message to channel
+        # Returns message to channel that triggered event
         await message.channel.send("Plrrrp")
     if message.content == "joey":
         await message.channel.send("https://c.tenor.com/7Z_C25O8SiUAAAAM/joey-hero.gif")
     if message.content == "bobby":
         await message.channel.send("fuck u bobby")
 
-
+# Allowing bot to access voice channels
 @bot.command()
 async def join(ctx):
     channel = ctx.author.voice.voice_channel
