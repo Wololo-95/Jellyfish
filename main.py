@@ -1,59 +1,35 @@
-# Import Discord.py - allow access to discord API
-import discord
-
-import os
-import random
+import nextcord
+from nextcord import Interaction
+from nextcord.ext import commands
 import dotenv
+import os
 
-# load environmental variables
 dotenv.load_dotenv()
-
-# Attempts to load the .env file containing bot token
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
-# Obtain discord client object - defined in discord.py CLIENT = BOT
-bot = discord.Client()
+# allows bot to connect to server
+intents = nextcord.Intents.default()
+intents.members = True
+
+client = commands.Bot(commands_prefix='$', intents=intents)
+
+dev_server = 987859987374166126
+main_server = 691695952855171153
 
 
-# Event listener for when bot offline -> online
-@bot.event
+@client.event
 async def on_ready():
-    # Creates counter to know how many servers the bot is connected to
-    chat_count = 0
-
-    # Loops through servers associated with bot
-    for guild in bot.guilds:
-        # Print server name and id
-        print(f"- {guild.id} (name: {guild.name})")
-        # Increment the guild counter
-        chat_count = chat_count + 1
-
-    # Prints value of chat_count (# servers bot is in)
-    print("Jellyfish is in" + str(chat_count) + "guilds/servers.")
+    print("Jellyfish 1.0 initiated...")
+    print("+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=")
 
 
-# Event listener for when a new message is sent to a channel
-@bot.event
-async def on_message(message):
-    # Checks to see if the message contains a given string
-    if message.content == "hello":
-        # Returns message to channel that triggered event
-        await message.channel.send("Plrrrp")
-    if message.content == "joey":
-        await message.channel.send("https://c.tenor.com/7Z_C25O8SiUAAAAM/joey-hero.gif")
-    if message.content == "bobby":
-        await message.channel.send("fuck u bobby")
-
-# Allowing bot to access voice channels
-@bot.command()
-async def join(ctx):
-    channel = ctx.author.voice.voice_channel
-    await channel.connect()
+@client.slash_command(name="test", description="Tests the command function", guild_ids=[dev_server, main_server])
+async def test(interaction: Interaction):
+    await interaction.response.send_message("Plrrp")
 
 
-@bot.command()
-async def leave(ctx):
-    await ctx.voice_client.disconnect()
+@client.slash_command(name="join", description="Asks Jellyfish to join the active voice channel",guild_ids=[dev_server, main_server])
+async def vc_join(interaction: Interaction):
+    await interaction.response.send_message("Command not finished")
 
-# Runs bot on specified hidden token
-bot.run(DISCORD_TOKEN)
+client.run(DISCORD_TOKEN)
